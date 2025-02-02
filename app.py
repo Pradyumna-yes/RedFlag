@@ -19,7 +19,11 @@ client = OpenAI(
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return "Chat Analysis API is Running!"
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 3000))  # Default to 5000 if no port is assigned
+    app.run(host="0.0.0.0", port=port, debug=False)
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
