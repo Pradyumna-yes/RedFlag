@@ -9,8 +9,8 @@ CORS(app)
 # API Configuration
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
 
-if OPENROUTER_API_KEY == "your_real_api_key_here":
-    raise ValueError("❌ ERROR: Please set your OpenRouter API key in your environment variables.")
+if not OPENROUTER_API_KEY or OPENROUTER_API_KEY.startswith("sk-or-v1-"):
+    raise ValueError("❌ ERROR: Please set a valid OpenRouter API key in environment variables.")
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -21,10 +21,6 @@ client = OpenAI(
 def home():
     return "Chat Analysis API is Running!"
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 3000))  # Default to 5000 if no port is assigned
-    app.run(host="0.0.0.0", port=port, debug=False)
-
 @app.route("/analyze", methods=["POST"])
 def analyze():
     try:
@@ -32,10 +28,10 @@ def analyze():
             return jsonify({"error": "Invalid request", "details": "Request must be JSON"}), 400
         
         data = request.get_json()
-        if "text" not in data:
-            return jsonify({"error": "Invalid input", "details": "Missing 'text' field"}), 400
+        if "conversation" not in data:
+            return jsonify({"error": "Invalid input", "details": "Missing 'conversation' field"}), 400
 
-        conversation_text = data["text"].strip()
+        conversation_text = data["conversation"].strip()
         if not conversation_text:
             return jsonify({"error": "Invalid input", "details": "Empty conversation text"}), 400
 
@@ -52,10 +48,6 @@ def analyze_conversation(conversation_text):
         print("🔵 Sending request to OpenRouter...")
         
         completion = client.chat.completions.create(
-            extra_headers={
-                "HTTP-Referer": "https://your-website.com",  # Optional: Your site URL
-                "X-Title": "YourApp",  # Optional: Your app name
-            },
             model="deepseek/deepseek-r1:free",
             messages=[
                 {"role": "system", "content": "Analyze the following conversation."},
@@ -66,11 +58,11 @@ def analyze_conversation(conversation_text):
         print("✅ OpenRouter Response:", completion)
 
         return {
-            "relationship_type": completion.choices[0].message.content,  # Modify based on OpenRouter response
-            "confidence": 0.95,  # Placeholder, adjust as needed
-            "sentiment": "neutral",  # Placeholder, adjust as needed
+            "relationship_type": completion.choices[0].message.content,
+            "confidence": 0.95,
+            "sentiment": "neutral",
             "intensity": "medium",
-            "key_intentions": ["informative"],  # Placeholder
+            "key_intentions": ["informative"],
             "main_topics": ["conversation"]
         }
 
@@ -79,4 +71,5 @@ def analyze_conversation(conversation_text):
         return {"error": "API request failed", "details": str(e)}
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 3000))  # Default to 3000 for Coolify
+    app.run(host="0.0.0.0", port=port, debug=False)
