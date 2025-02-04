@@ -17,6 +17,11 @@ client = OpenAI(
     api_key=OPENROUTER_API_KEY,
 )
 
+@app.route("/test")
+def test():
+    return "Flask is running!"
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
