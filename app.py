@@ -3,9 +3,8 @@ from flask_cors import CORS
 from openai import OpenAI
 import os
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
-
+app = Flask(__name__, template_folder="templates", static_folder="static")
+CORS(app)
 
 # API Configuration
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
@@ -17,11 +16,6 @@ client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=OPENROUTER_API_KEY,
 )
-
-@app.route("/test")
-def test():
-    return "Flask is running!"
-
 
 @app.route("/")
 def home():
