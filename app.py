@@ -54,7 +54,7 @@ def analyze_conversation(conversation_text):
 
         completion = client.chat.completions.create(
             extra_headers={
-                "HTTP-Referer": "https://your-website.com",  
+                "HTTP-Referer": "http://pc4w0sww88swo884sc00g8ww.sg.freesv.com/",  
                 "X-Title": "YourApp",
             },
             model="deepseek/deepseek-r1:free",
