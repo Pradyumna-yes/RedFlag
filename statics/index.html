@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No More Situationship - Fun Chat Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff6f61; /* Coral */
+            --secondary: #6b5b95; /* Purple */
+            --accent: #88b04b; /* Green */
+            --bg: linear-gradient(135deg, #f9f9f9, #eaeaea);
+            --glass: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Neue', cursive, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Glass Morphism Effect */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow);
+        }
+
+        /* Header Styles */
+        header {
+            width: 100%;
+            max-width: 1200px;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 2px 2px 0 var(--secondary);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Main Upload Section */
+        .upload-section {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .upload-section h1 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-section p {
+            color: var(--secondary);
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .upload-box {
+            border: 2px dashed var(--primary);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            transition: all 0.3s ease;
+            background: var(--glass);
+            cursor: pointer;
+        }
+
+        .upload-box:hover {
+            background: rgba(255, 111, 97, 0.1);
+            border-color: var(--accent);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            animation: spin 5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .analyze-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            background: var(--secondary);
+        }
+
+        /* Results Section */
+        .results-section {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .results-section h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        #analysis-content {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Footer Styles */
+        footer {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: auto;
+            color: var(--secondary);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        footer a:hover {
+            opacity: 0.8;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .notification.success {
+            background: #88b04b;
+        }
+
+        .notification.error {
+            background: #ff6f61;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="glass">
+        <div class="logo">No More Situationship 🎉</div>
+        <p>Where your chats get analyzed with a sprinkle of fun!</p>
+    </header>
+
+    <div class="upload-section glass">
+        <h1>Upload Your Chat File</h1>
+        <p>Drop your .txt file and let the magic happen ✨</p>
+        
+        <div class="file-input-wrapper">
+            <input type="file" 
+                   id="fileInput" 
+                   class="file-input" 
+                   accept=".txt"
+                   onchange="handleFileSelect(event)">
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📁</div>
+                <p>Drag & drop your chat file here<br>or click to browse</p>
+                <p id="fileName" style="margin-top: 1rem; color: var(--primary);"></p>
+            </div>
+        </div>
+
+        <button class="analyze-btn" onclick="analyze()">
+            Analyze My Chat 🚀
+        </button>
+    </div>
+
+    <div class="results-section glass" id="results">
+        <h2>Analysis Results:</h2>
+        <div id="analysis-content"></div>
+    </div>
+
+    <footer class="glass">
+        <p>Made with ❤️ by <a href="#your-link">TheCryingShoulder</a></p>
+        <p>© 2024 ChatVibes. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // File Handling
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = file.name;
+                showNotification('File uploaded successfully! 🎉', 'success');
+            }
+        }
+
+        async function analyze() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) {
+                showNotification('Please select a file first!', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const text = await file.text();
+			
+			console.log("📤 Sending to API:", text); // Debugging log
+            
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+
+            if (!response.ok) {
+                showNotification('Analysis failed', 'error');
+                return;
+            }
+            
+            const data = await response.json();
+			 console.log("✅ API Response:", data); // Debugging log
+            // ✅ Ensure results section is visible
+    const resultsSection = document.getElementById('results');
+    resultsSection.style.display = 'block';
+
+    // ✅ Update the results with the analyzed data
+    const analysisContent = document.getElementById('analysis-content');
+    analysisContent.innerHTML = `
+        <strong>Analysis:</strong> <br>
+        <p><b>Relationship Type:</b> ${data.relationship_type}</p>
+        <p><b>Confidence:</b> ${(data.confidence * 100).toFixed(1)}%</p>
+        <p><b>Sentiment:</b> ${data.sentiment} (${data.intensity})</p>
+        <p><b>Intentions:</b> ${data.key_intentions.join(", ")}</p>
+        <p><b>Main Topics:</b> ${data.main_topics.join(", ")}</p>
+    `;
+}
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => { notification.remove(); }, 3000);
+        }
+    </script>
+</body>
+</html>
