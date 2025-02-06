@@ -63,8 +63,8 @@ def analyze_conversation(conversation_text):
     try:
         # Trim and limit the length of the text to avoid exceeding model constraints
         cleaned_text = conversation_text.strip()
-        if len(cleaned_text) > 2000:  # Adjust as needed
-            cleaned_text = cleaned_text[:2000] + " ... (trimmed)"
+        if len(cleaned_text) > 100:  # Adjust as needed
+            cleaned_text = cleaned_text[:100] + " ... (trimmed)"
 
         print(f"🔹 Sending {len(cleaned_text)} characters to OpenRouter")
 
