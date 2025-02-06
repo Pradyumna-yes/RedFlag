@@ -68,7 +68,7 @@ def analyze_conversation(conversation_text):
         print(f"🔹 Sending {len(cleaned_text)} characters to OpenRouter")
 
         # Send the conversation text to OpenRouter API
-        completion = openai.client.chat.completions.create(
+        completion = openai.ChatCompletion.create(
             model="deepseek/deepseek-r1:free",
             messages=[
                 {"role": "system", "content": "Analyze the following conversation and provide structured insights."},
