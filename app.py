@@ -20,9 +20,8 @@ if not OPENROUTER_API_KEY:
     raise ValueError("❌ ERROR: OpenRouter API key is missing. Please set it in the environment variables.")
 
 # Initialize OpenAI client
-client = openai.OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=OPENROUTER_API_KEY
+openai.api_key = os.getenv("OPENROUTER_API_KEY")
+openai.base_url = "https://openrouter.ai/api/v1"
 )
 
 # Home route to serve the frontend
