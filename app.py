@@ -66,7 +66,7 @@ def analyze_conversation(conversation_text):
         print(f"🔹 Sending {len(cleaned_text)} characters to OpenRouter")
 
         # Send the conversation text to OpenRouter API
-        completion = client.chat.completions.create(
+        completion = openai.ChatCompletion.create(
             extra_headers={
                 "HTTP-Referer": "https://your-website.com",  # Replace with your website URL
                 "X-Title": "YourApp",  # Replace with your app name
@@ -106,5 +106,7 @@ def handle_exception(e):
 # Run the Flask app
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
     app.run(host="0.0.0.0", port=port, debug=debug_mode)
+
 
