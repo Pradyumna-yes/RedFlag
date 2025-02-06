@@ -22,9 +22,10 @@ if not OPENROUTER_API_KEY:
     raise ValueError("❌ ERROR: OpenRouter API key is missing. Please set it in the environment variables.")
 
 # Initialize OpenAI client
-openai.api_key = os.getenv("OPENROUTER_API_KEY")
-openai.base_url = "https://openrouter.ai/api/v1"
-
+client = openai.OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=OPENROUTER_API_KEY
+)
 
 # Home route to serve the frontend
 @app.route("/")
@@ -68,7 +69,7 @@ def analyze_conversation(conversation_text):
         print(f"🔹 Sending {len(cleaned_text)} characters to OpenRouter")
 
         # Send the conversation text to OpenRouter API
-        completion = openai.ChatCompletion.create(
+        completion = client.chat.completions.create(
             model="deepseek/deepseek-r1:free",
             messages=[
                 {"role": "system", "content": "Analyze the following conversation and provide structured insights."},
