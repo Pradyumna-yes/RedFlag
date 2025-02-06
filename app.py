@@ -28,7 +28,7 @@ client = openai.OpenAI(
 # Home route to serve the frontend
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return app.send_static_file("index.html")
 
 # Analyze route to handle file upload and analysis
 @app.route("/analyze", methods=["POST"])
@@ -101,6 +101,6 @@ def analyze_conversation(conversation_text):
 
 # Run the Flask app
 if __name__ == "__main__":
-    # Set debug mode based on environment variable
-    debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
-    app.run(host="0.0.0.0", port=5000, debug=debug_mode)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
+
