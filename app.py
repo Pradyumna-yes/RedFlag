@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from openai import OpenAI
+import openai
 import os
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
@@ -12,9 +12,9 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "sk-or-v1-c91e1579846ef8976
 if OPENROUTER_API_KEY == "your_real_api_key_here":
     raise ValueError("❌ ERROR: Please set your OpenRouter API key in your environment variables.")
 
-client = OpenAI(
+client = openai.OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=OPENROUTER_API_KEY,
+    api_key=OPENROUTER_API_KEY
 )
 
 @app.route("/")
@@ -54,7 +54,7 @@ def analyze_conversation(conversation_text):
 
         completion = client.chat.completions.create(
             extra_headers={
-                "HTTP-Referer": "http://pc4w0sww88swo884sc00g8ww.sg.freesv.com/",  
+                "HTTP-Referer": "https://your-website.com",  
                 "X-Title": "YourApp",
             },
             model="deepseek/deepseek-r1:free",
@@ -83,4 +83,3 @@ def analyze_conversation(conversation_text):
         return {"error": "API request failed", "details": str(e)}
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-
