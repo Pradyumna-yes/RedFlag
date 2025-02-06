@@ -99,6 +99,11 @@ def analyze_conversation(conversation_text):
         print("❌ OpenRouter API Error:", str(e))
         return {"error": "API request failed", "details": str(e)}
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    print("❌ SERVER ERROR:", traceback.format_exc())
+    return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+
 # Run the Flask app
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
