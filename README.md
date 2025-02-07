@@ -175,15 +175,3 @@ Made with ❤️ by **TheCryingShoulder** | © 2024 **Redflag**. All rights rese
 2. Create a new file named `README.md` in the root of your GitHub repository.
 3. Paste the content into the `README.md` file.
 4. Commit and push the changes to your repository.
-
----
-
-## Preview of the README
-Here’s how the README will look on GitHub:
-
-![README Preview](https://via.placeholder.com/800x600.png?text=README+Preview)
-
----
-
-Let me know if you need further adjustments! 🚀
-
